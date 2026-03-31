@@ -1,7 +1,6 @@
-import { Type } from 'class-transformer';
-import { IsString, IsOptional, IsInt } from 'class-validator';
+import { IsOptional, IsString, IsIn } from 'class-validator';
 
-export class SearchIncidentDto {
+export class StatsQueryDto {
   @IsOptional()
   @IsString()
   keyword?: string;
@@ -31,16 +30,15 @@ export class SearchIncidentDto {
   toDate?: string;
 
   @IsOptional()
-  @IsString()
-  sourceType?: string;
+  @IsIn(['day', 'week', 'month', 'year'])
+  groupByTime?: 'day' | 'week' | 'month' | 'year';
 
   @IsOptional()
-  @Type(() => Number)
-  @IsInt()
-  page?: number = 1;
-
-  @IsOptional()
-  @Type(() => Number)
-  @IsInt()
-  limit?: number = 10;
+  @IsIn([
+    'incidentTypeCode',
+    'incidentCategoryCode',
+    'incidentSubtypeCode',
+    'ma_xa',
+  ])
+  groupBy?: string;
 }

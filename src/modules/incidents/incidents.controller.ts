@@ -17,10 +17,16 @@ import { SearchIncidentDto } from './dto/search-incident.dto';
 export class IncidentsController {
   constructor(private readonly incidentsService: IncidentsService) {}
 
+  //Route tinh
   //SEARCH, FILTER, PAGINATION
   @Get('search')
   searchIncidents(@Query() query: SearchIncidentDto) {
     return this.incidentsService.searchIncidents(query);
+  }
+  //Recycle Bin
+  @Get('deleted')
+  findDeleted() {
+    return this.incidentsService.findDeleted();
   }
 
   //CRUD
@@ -59,49 +65,10 @@ export class IncidentsController {
     return this.incidentsService.restore(id);
   }
 
-  //Recycle Bin
-  @Get('deleted')
-  findDeleted() {
-    return this.incidentsService.findDeleted();
-  }
-
   //Hard delete an incident
   @Delete(':id/hard')
   @HttpCode(204)
   async hardDelete(@Param('id') id: string) {
     await this.incidentsService.hardDelete(id);
-  }
-
-  // STATISTICS
-  @Get('stats/by-date')
-  statByDate(
-    @Query('fromDate') fromDate?: string,
-    @Query('toDate') toDate?: string,
-  ) {
-    return this.incidentsService.statByDate(fromDate, toDate);
-  }
-
-  @Get('stats/by-type')
-  statByType(
-    @Query('fromDate') fromDate?: string,
-    @Query('toDate') toDate?: string,
-  ) {
-    return this.incidentsService.statByType(fromDate, toDate);
-  }
-
-  @Get('stats/by-subtype')
-  statBySubtype(
-    @Query('fromDate') fromDate?: string,
-    @Query('toDate') toDate?: string,
-  ) {
-    return this.incidentsService.statBySubtype(fromDate, toDate);
-  }
-
-  @Get('stats/by-ward')
-  statByWard(
-    @Query('fromDate') fromDate?: string,
-    @Query('toDate') toDate?: string,
-  ) {
-    return this.incidentsService.statByWard(fromDate, toDate);
   }
 }

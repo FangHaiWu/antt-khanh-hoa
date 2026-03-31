@@ -6,6 +6,7 @@ import {
   IsUrl,
   IsInt,
   IsEnum,
+  IsNumber,
 } from 'class-validator';
 import { SourceType } from '../enums/source-type.enum';
 
@@ -41,4 +42,12 @@ export class CreateIncidentDto {
   @IsOptional()
   @IsString()
   incidentSubtypeCode?: string;
+
+  @IsOptional()
+  @IsNumber()
+  lng?: number;
+
+  @IsOptional()
+  @IsNumber()
+  lat?: number;
 }
