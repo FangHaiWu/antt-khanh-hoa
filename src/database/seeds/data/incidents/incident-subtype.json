@@ -1,0 +1,54 @@
+[
+  {
+    "code": "ANM_LDCD_OTP",
+    "name": "Lừa đảo OTP ngân hàng",
+    "typeCode": "ANM_LDCD"
+  },
+  {
+    "code": "ANM_LDCD_FB",
+    "name": "Lừa đảo qua Facebook",
+    "typeCode": "ANM_LDCD"
+  },
+
+  { "code": "ANM_TCM_DDOS", "name": "Tấn công DDoS", "typeCode": "ANM_TCM" },
+  {
+    "code": "ANM_TCM_MALWARE",
+    "name": "Phát tán mã độc",
+    "typeCode": "ANM_TCM"
+  },
+
+  { "code": "SH_TC_XM", "name": "Trộm xe máy", "typeCode": "SH_TC" },
+  { "code": "SH_TC_NHA", "name": "Trộm nhà dân", "typeCode": "SH_TC" },
+  {
+    "code": "SH_LDCD_TS",
+    "name": "Lừa đảo chiếm đoạt tài sản",
+    "typeCode": "SH_LDCD"
+  },
+  {
+    "code": "SH_LDCD_DAUTU",
+    "name": "Lừa đảo đầu tư tài chính",
+    "typeCode": "SH_LDCD"
+  },
+
+  { "code": "MT_MBMT_SYN", "name": "Ma túy tổng hợp", "typeCode": "MT_MBMT" },
+  { "code": "MT_MBMT_HEROIN", "name": "Heroin", "typeCode": "MT_MBMT" },
+
+  { "code": "TT_GRTT_DANH_NHAU", "name": "Đánh nhau", "typeCode": "TT_GRTT" },
+  { "code": "TT_GRTT_TUTAP", "name": "Tụ tập gây rối", "typeCode": "TT_GRTT" },
+
+  {
+    "code": "GT_VPGT_NONG_DO_CON",
+    "name": "Vi phạm nồng độ cồn",
+    "typeCode": "GT_VPGT"
+  },
+  {
+    "code": "GT_VPGT_TNGT",
+    "name": "Tai nạn giao thông",
+    "typeCode": "GT_VPGT"
+  },
+  {
+    "code": "SH_TC_TS",
+    "name": "Trộm cắp tài sản",
+    "typeCode": "SH_TC"
+  }
+]

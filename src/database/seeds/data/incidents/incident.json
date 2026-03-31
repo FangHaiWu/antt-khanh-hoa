@@ -1,0 +1,102 @@
+[
+  {
+    "title": "Mất trộm xe máy tại phường Vĩnh Hải",
+    "description": "Người dân phát hiện xe máy bị mất tại khu trọ.",
+    "incidentTime": "2026-03-20T22:30:00.000Z",
+    "incidentLocation": "Phường Vĩnh Hải, TP Nha Trang",
+    "sourceType": "nguoi_dan",
+    "sourceUrl": null,
+    "incidentTypeCode": "SH_TC",
+    "ma_xa": "22357"
+  },
+  {
+    "title": "Lừa đảo chiếm đoạt qua Facebook tại phường Phước Long",
+    "description": "Đối tượng giả danh người quen để vay tiền.",
+    "incidentTime": "2026-03-18T10:15:00.000Z",
+    "incidentLocation": "Phường Phước Long, TP Nha Trang",
+    "sourceType": "bao_chi",
+    "sourceUrl": null,
+    "incidentTypeCode": "ANM_LDCD",
+    "ma_xa": "22348"
+  },
+  {
+    "title": "Bắt giữ đối tượng mua bán ma túy tại phường Cam Lợi",
+    "description": "Công an bắt quả tang giao dịch ma túy tổng hợp.",
+    "incidentTime": "2026-03-15T19:45:00.000Z",
+    "incidentLocation": "Phường Cam Lợi, TP Cam Ranh",
+    "sourceType": "cong_an",
+    "sourceUrl": null,
+    "incidentTypeCode": "MT_MBMT",
+    "ma_xa": "22492"
+  },
+  {
+    "title": "Tai nạn giao thông tại quốc lộ 1A đoạn qua Diên Khánh",
+    "description": "Va chạm giữa xe tải và xe máy.",
+    "incidentTime": "2026-03-10T07:20:00.000Z",
+    "incidentLocation": "Huyện Diên Khánh, Khánh Hòa",
+    "sourceType": "bao_chi",
+    "sourceUrl": null,
+    "incidentTypeCode": "GT_VPGT",
+    "ma_xa": "22420"
+  },
+  {
+    "title": "Tụ tập đánh nhau tại phường Ninh Hiệp",
+    "description": "Hai nhóm thanh niên xô xát gây rối.",
+    "incidentTime": "2026-03-12T23:10:00.000Z",
+    "incidentLocation": "Phường Ninh Hiệp, TX Ninh Hòa",
+    "sourceType": "nguoi_dan",
+    "sourceUrl": null,
+    "incidentTypeCode": "TT_GRTT",
+    "ma_xa": "22380"
+  },
+  {
+    "title": "Phát hiện hành vi trốn thuế tại doanh nghiệp địa phương",
+    "description": "Doanh nghiệp bị phát hiện kê khai sai thuế.",
+    "incidentTime": "2026-03-08T09:00:00.000Z",
+    "incidentLocation": "TP Nha Trang",
+    "sourceType": "cong_an",
+    "sourceUrl": null,
+    "incidentTypeCode": "KT_TT",
+    "ma_xa": "22340"
+  },
+  {
+    "title": "Phát tán mã độc qua email giả mạo tại Khánh Hòa",
+    "description": "Nhiều người nhận email chứa mã độc.",
+    "incidentTime": "2026-03-03T08:15:00.000Z",
+    "incidentLocation": "Toàn tỉnh Khánh Hòa",
+    "sourceType": "bao_chi",
+    "sourceUrl": null,
+    "incidentTypeCode": "ANM_TCM",
+    "ma_xa": "22340"
+  },
+  {
+    "title": "Xả thải gây ô nhiễm môi trường tại KCN Suối Dầu",
+    "description": "Nhà máy xả thải chưa xử lý ra môi trường.",
+    "incidentTime": "2026-03-02T16:00:00.000Z",
+    "incidentLocation": "KCN Suối Dầu, Cam Lâm",
+    "sourceType": "bao_chi",
+    "sourceUrl": null,
+    "incidentTypeCode": "MTT_ONMT",
+    "ma_xa": "22460"
+  },
+  {
+    "title": "Cố ý gây thương tích tại phường Vạn Thắng",
+    "description": "Đối tượng dùng hung khí gây thương tích.",
+    "incidentTime": "2026-03-01T21:40:00.000Z",
+    "incidentLocation": "Phường Vạn Thắng, TP Nha Trang",
+    "sourceType": "nguoi_dan",
+    "sourceUrl": null,
+    "incidentTypeCode": "TM_CYGTT",
+    "ma_xa": "22343"
+  },
+  {
+    "title": "Cướp giật tài sản tại khu du lịch biển Nha Trang",
+    "description": "Đối tượng giật điện thoại của du khách.",
+    "incidentTime": "2026-03-05T18:10:00.000Z",
+    "incidentLocation": "Trần Phú, Nha Trang",
+    "sourceType": "nguoi_dan",
+    "sourceUrl": null,
+    "incidentTypeCode": "SH_CTS",
+    "ma_xa": "22340"
+  }
+]

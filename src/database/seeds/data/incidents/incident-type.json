@@ -1,0 +1,113 @@
+[
+  {
+    "code": "ANQG_TT",
+    "name": "Tuyên truyền chống Nhà nước",
+    "categoryCode": "ANQG",
+    "lawCode": "117_BLHS"
+  },
+
+  {
+    "code": "ANM_LDCD",
+    "name": "Lừa đảo chiếm đoạt qua mạng",
+    "categoryCode": "ANM",
+    "lawCode": null
+  },
+  {
+    "code": "ANM_TCM",
+    "name": "Tấn công mạng",
+    "categoryCode": "ANM",
+    "lawCode": null
+  },
+
+  {
+    "code": "TM_GN",
+    "name": "Giết người",
+    "categoryCode": "TM",
+    "lawCode": "123_BLHS"
+  },
+  {
+    "code": "TM_CYGTT",
+    "name": "Cố ý gây thương tích",
+    "categoryCode": "TM",
+    "lawCode": "134_BLHS"
+  },
+
+  {
+    "code": "SH_TC",
+    "name": "Trộm cắp tài sản",
+    "categoryCode": "SH",
+    "lawCode": "173_BLHS"
+  },
+  {
+    "code": "SH_CTS",
+    "name": "Cướp tài sản",
+    "categoryCode": "SH",
+    "lawCode": "168_BLHS"
+  },
+  {
+    "code": "SH_LDCD",
+    "name": "Lừa đảo chiếm đoạt tài sản",
+    "categoryCode": "SH",
+    "lawCode": "174_BLHS"
+  },
+
+  {
+    "code": "MT_MBMT",
+    "name": "Mua bán trái phép chất ma túy",
+    "categoryCode": "MT",
+    "lawCode": "251_BLHS"
+  },
+  {
+    "code": "MT_TTMT",
+    "name": "Tàng trữ trái phép chất ma túy",
+    "categoryCode": "MT",
+    "lawCode": "249_BLHS"
+  },
+
+  {
+    "code": "KT_BL",
+    "name": "Buôn lậu",
+    "categoryCode": "KT",
+    "lawCode": "188_BLHS"
+  },
+  {
+    "code": "KT_TT",
+    "name": "Trốn thuế",
+    "categoryCode": "KT",
+    "lawCode": "200_BLHS"
+  },
+
+  {
+    "code": "TN_TOTS",
+    "name": "Tham ô tài sản",
+    "categoryCode": "TN",
+    "lawCode": "353_BLHS"
+  },
+  {
+    "code": "TN_NHL",
+    "name": "Nhận hối lộ",
+    "categoryCode": "TN",
+    "lawCode": "354_BLHS"
+  },
+
+  {
+    "code": "TT_GRTT",
+    "name": "Gây rối trật tự công cộng",
+    "categoryCode": "TT",
+    "lawCode": "318_BLHS"
+  },
+
+  {
+    "code": "GT_VPGT",
+    "name": "Vi phạm quy định giao thông đường bộ",
+    "categoryCode": "GT",
+    "lawCode": "260_BLHS"
+  },
+
+  {
+    "code": "MTT_ONMT",
+    "name": "Gây ô nhiễm môi trường",
+    "categoryCode": "MTT",
+    "lawCode": "235_BLHS"
+  }
+]

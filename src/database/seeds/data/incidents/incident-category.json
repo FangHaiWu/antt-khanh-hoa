@@ -1,0 +1,12 @@
+[
+  { "code": "ANQG", "name": "An ninh quốc gia" },
+  { "code": "ANM", "name": "An ninh mạng" },
+  { "code": "TM", "name": "Tính mạng, sức khỏe" },
+  { "code": "SH", "name": "Sở hữu" },
+  { "code": "MT", "name": "Ma túy" },
+  { "code": "KT", "name": "Kinh tế" },
+  { "code": "TN", "name": "Tham nhũng" },
+  { "code": "TT", "name": "Trật tự công cộng" },
+  { "code": "GT", "name": "Giao thông" },
+  { "code": "MTT", "name": "Môi trường" }
+]
