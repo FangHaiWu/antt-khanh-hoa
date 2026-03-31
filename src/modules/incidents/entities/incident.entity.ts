@@ -10,6 +10,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 
+import type { Point } from 'geojson';
 import { IncidentType } from './incidentType.entity';
 import { Ward } from 'src/modules/administrative_unit/entities/wards.entity';
 @Index(['incidentTime'])
@@ -49,6 +50,14 @@ export class Incident {
   updatedAt: Date;
   @DeleteDateColumn()
   deletedAt: Date;
+
+  @Column({
+    type: 'geometry',
+    spatialFeatureType: 'Point',
+    srid: 4326,
+    nullable: true,
+  })
+  location: Point;
 
   // Quan he chinh
   @ManyToOne(() => IncidentType, (incidentType) => incidentType.incidents, {

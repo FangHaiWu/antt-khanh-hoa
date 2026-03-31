@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AdministrativeUnitModule } from './modules/administrative_unit/administrative_unit.module';
 import { IncidentsController } from './modules/incidents/incidents.controller';
 import { IncidentsModule } from './modules/incidents/incidents.module';
+import { AnalyticsModule } from './modules/analytics/analytics.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -22,6 +23,7 @@ import { IncidentsModule } from './modules/incidents/incidents.module';
     }),
     AdministrativeUnitModule,
     IncidentsModule,
+    AnalyticsModule,
   ],
   controllers: [AppController, IncidentsController],
   providers: [AppService],

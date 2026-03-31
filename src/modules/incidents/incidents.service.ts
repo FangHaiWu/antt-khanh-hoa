@@ -3,7 +3,7 @@ import {
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
-import { Repository, IsNull, Not } from 'typeorm';
+import { Repository, IsNull, Not, DeepPartial } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Incident } from './entities/incident.entity';
 import { CreateIncidentDto } from './dto/create-incident.dto';
@@ -12,6 +12,7 @@ import { Ward } from '../administrative_unit/entities/wards.entity';
 import { UpdateIncidentDto } from './dto/update-incident.dto';
 import { IncidentSubtype } from './entities/incidentSubtype.entity';
 import { SearchIncidentDto } from './dto/search-incident.dto';
+import { applyIncidentFilters } from 'src/common/query-builders/incident-query.builder';
 
 @Injectable()
 export class IncidentsService {
@@ -92,7 +93,14 @@ export class IncidentsService {
       incidentCategoryCode,
       incidentSubtypeCode,
       ward,
-    });
+      location:
+        createIncidentDto.lng && createIncidentDto.lat
+          ? {
+              type: 'Point',
+              coordinates: [createIncidentDto.lng, createIncidentDto.lat],
+            }
+          : null,
+    } as DeepPartial<Incident>);
     return await this.incidentRepository.save(incident);
   }
 
@@ -118,9 +126,10 @@ export class IncidentsService {
       throw new NotFoundException('Incident not found');
     }
 
-    // 1. Xu ly cap nhat incident type
     let type: IncidentType | null = null;
+    let subtype: IncidentSubtype | null = null;
 
+    // 1. Xu ly cap nhat incident type neu co
     if (updateIncidentDto.incidentTypeId) {
       type = await this.incidentTypeRepository.findOne({
         where: { id: updateIncidentDto.incidentTypeId },
@@ -129,71 +138,68 @@ export class IncidentsService {
       if (!type) {
         throw new NotFoundException('IncidentType not found');
       }
+    }
+    // 2. Xu ly cap nhat subtype neu co
+    if (updateIncidentDto.incidentSubtypeCode) {
+      subtype = await this.incidentSubtypeRepository.findOne({
+        where: { code: updateIncidentDto.incidentSubtypeCode },
+        relations: ['incidentType', 'incidentType.category'],
+      });
+      if (!subtype) {
+        throw new NotFoundException('IncidentSubtype not found');
+      }
 
-      // 2. Xu ly cap nhat subtype neu co
-      let subtype: IncidentSubtype | null = null;
-      if (updateIncidentDto.incidentSubtypeCode) {
-        subtype = await this.incidentSubtypeRepository.findOne({
-          where: { code: updateIncidentDto.incidentSubtypeCode },
-          relations: ['incidentType', 'incidentType.category'],
-        });
-        if (!subtype) {
-          throw new NotFoundException('IncidentSubtype not found');
-        }
-
-        // Check consistency neu co ca incident type
-        if (type && subtype.incidentType.id !== type.id) {
-          throw new BadRequestException(
-            'IncidentSubtype does not belong to the specified IncidentType',
-          );
-        }
-
-        // 3. Check derive hierachy
-        if (subtype) {
-          // ưu tiên subtype > type
-          incident.incidentTypeId = subtype.incidentType.id;
-          incident.incidentTypeCode = subtype.incidentType.code;
-          incident.incidentCategoryCode = subtype.incidentType.category.code;
-          incident.incidentSubtypeCode = subtype.code;
-        } else if (type) {
-          // nếu có type nhưng không có subtype thì chỉ cập nhật type và category
-          incident.incidentTypeId = type.id;
-          incident.incidentTypeCode = type.code;
-          incident.incidentCategoryCode = type.category.code;
-          incident.incidentSubtypeCode = null;
-        }
-        // 4. validate ward
-        if (updateIncidentDto.ma_xa) {
-          const ward = await this.wardRepository.findOne({
-            where: { ma_xa: updateIncidentDto.ma_xa },
-          });
-          if (!ward) {
-            throw new NotFoundException('Ward not found');
-          }
-          incident.ward = ward;
-        }
-      }
-      // 5. Update normal fields
-      if (updateIncidentDto.title !== undefined) {
-        incident.title = updateIncidentDto.title;
-      }
-      if (updateIncidentDto.description !== undefined) {
-        incident.description = updateIncidentDto.description;
-      }
-      if (updateIncidentDto.incidentTime !== undefined) {
-        incident.incidentTime = new Date(updateIncidentDto.incidentTime);
-      }
-      if (updateIncidentDto.incidentLocation !== undefined) {
-        incident.incidentLocation = updateIncidentDto.incidentLocation;
-      }
-      if (updateIncidentDto.sourceType !== undefined) {
-        incident.sourceType = updateIncidentDto.sourceType;
-      }
-      if (updateIncidentDto.sourceUrl !== undefined) {
-        incident.sourceUrl = updateIncidentDto.sourceUrl;
+      // Check consistency neu co ca incident type
+      if (type && subtype.incidentType.id !== type.id) {
+        throw new BadRequestException(
+          'IncidentSubtype does not belong to the specified IncidentType',
+        );
       }
     }
+    // 3. Check derive hierachy
+    if (subtype) {
+      // ưu tiên subtype > type
+      incident.incidentTypeId = subtype.incidentType.id;
+      incident.incidentTypeCode = subtype.incidentType.code;
+      incident.incidentCategoryCode = subtype.incidentType.category.code;
+      incident.incidentSubtypeCode = subtype.code;
+    } else if (type) {
+      // nếu có type nhưng không có subtype thì chỉ cập nhật type và category
+      incident.incidentTypeId = type.id;
+      incident.incidentTypeCode = type.code;
+      incident.incidentCategoryCode = type.category.code;
+      incident.incidentSubtypeCode = null;
+    }
 
+    // 4. validate ward
+    if (updateIncidentDto.ma_xa) {
+      const ward = await this.wardRepository.findOne({
+        where: { ma_xa: updateIncidentDto.ma_xa },
+      });
+      if (!ward) {
+        throw new NotFoundException('Ward not found');
+      }
+      incident.ward = ward;
+    }
+    // 5. Update normal fields
+    if (updateIncidentDto.title !== undefined) {
+      incident.title = updateIncidentDto.title;
+    }
+    if (updateIncidentDto.description !== undefined) {
+      incident.description = updateIncidentDto.description;
+    }
+    if (updateIncidentDto.incidentTime !== undefined) {
+      incident.incidentTime = new Date(updateIncidentDto.incidentTime);
+    }
+    if (updateIncidentDto.incidentLocation !== undefined) {
+      incident.incidentLocation = updateIncidentDto.incidentLocation;
+    }
+    if (updateIncidentDto.sourceType !== undefined) {
+      incident.sourceType = updateIncidentDto.sourceType;
+    }
+    if (updateIncidentDto.sourceUrl !== undefined) {
+      incident.sourceUrl = updateIncidentDto.sourceUrl;
+    }
     return await this.incidentRepository.save(incident);
   }
 
@@ -268,39 +274,8 @@ export class IncidentsService {
     qb.leftJoinAndSelect('incident.incidentType', 'incidentType');
     qb.leftJoinAndSelect('incident.ward', 'ward');
     qb.where('1=1');
-    if (query.keyword) {
-      qb.andWhere(
-        'incident.title ILIKE :keyword OR incident.description ILIKE :keyword',
-        {
-          keyword: `%${query.keyword}%`,
-        },
-      );
-    }
-    if (query.incidentCategoryCode) {
-      qb.andWhere('incident.incidentCategoryCode = :categoryCode', {
-        categoryCode: query.incidentCategoryCode,
-      });
-    }
-    if (query.incidentTypeCode) {
-      qb.andWhere('incident.incidentTypeCode = :typeCode', {
-        typeCode: query.incidentTypeCode,
-      });
-    }
-    if (query.incidentSubtypeCode) {
-      qb.andWhere('incident.incidentSubtypeCode = :subtypeCode', {
-        subtypeCode: query.incidentSubtypeCode,
-      });
-    }
-    if (query.ma_xa) {
-      qb.andWhere('incident.ma_xa = :ma_xa', { ma_xa: query.ma_xa });
-    }
-    if (query.fromDate && query.toDate) {
-      qb.andWhere('incident.incidentTime BETWEEN :from AND :to', {
-        from: query.fromDate,
-        to: query.toDate,
-      });
-    }
 
+    applyIncidentFilters(qb, query);
     qb.orderBy('incident.incidentTime', 'DESC');
 
     const page = query.page || 1;
@@ -314,59 +289,5 @@ export class IncidentsService {
       page,
       limit,
     };
-  }
-  // STATISTICS
-
-  async statByType(fromDate?: string, toDate?: string) {
-    const qb = this.incidentRepository.createQueryBuilder('incident');
-    qb.where('incident.incidenTime BETWEEN :from AND :to', {
-      from: fromDate,
-      to: toDate,
-    });
-    return qb
-      .select('incident.incidentTypeCode', 'typeCode')
-      .addSelect('COUNT(*)', 'count')
-      .groupBy('incident.incidentTypeCode')
-      .getRawMany();
-  }
-
-  async statBySubtype(fromDate?: string, toDate?: string) {
-    const qb = this.incidentRepository.createQueryBuilder('incident');
-    qb.where('incident.incidenTime BETWEEN :from AND :to', {
-      from: fromDate,
-      to: toDate,
-    });
-    return qb
-      .select('incident.incidentSubtypeCode', 'subtypeCode')
-      .addSelect('COUNT(*)', 'count')
-      .groupBy('incident.incidentSubtypeCode')
-      .getRawMany();
-  }
-
-  async statByDate(fromDate?: string, toDate?: string) {
-    const qb = this.incidentRepository.createQueryBuilder('incident');
-    qb.where('incident.incidenTime BETWEEN :from AND :to', {
-      from: fromDate,
-      to: toDate,
-    });
-    return qb
-      .select('DATE(incident.incidentTime', 'date')
-      .addSelect('COUNT(*)', 'count')
-      .groupBy('DATE(incident.incidentTime)')
-      .orderBy('date', 'ASC')
-      .getRawMany();
-  }
-
-  async statByWard(fromDate?: string, toDate?: string) {
-    const qb = this.incidentRepository.createQueryBuilder('incident');
-    qb.where('incident.incidentTime BETWEEN :from AND :to', {
-      from: fromDate,
-      to: toDate,
-    });
-    return qb
-      .select('incident.ma_xa ', 'ma_xa')
-      .addSelect('COUNT(*)', 'count')
-      .groupBy('incident.ma_xa')
-      .getRawMany();
   }
 }
