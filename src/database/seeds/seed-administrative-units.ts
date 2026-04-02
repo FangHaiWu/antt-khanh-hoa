@@ -11,7 +11,7 @@ interface WardProperties {
 }
 
 export async function seedAdministrativeUnits(dataSource: DataSource) {
-  const filePath = path.join(__dirname, 'data/khanh=hoa-wards.geojson');
+  const filePath = path.join(__dirname, 'data/khanh_hoa_wards.geojson');
 
   const raw = fs.readFileSync(filePath, 'utf-8');
   const geojson = JSON.parse(raw) as FeatureCollection<
@@ -25,19 +25,39 @@ export async function seedAdministrativeUnits(dataSource: DataSource) {
 
     await dataSource.query(
       `
-      INSERT INTO administrative_units (
-        id, name, code, unit_type, level, geom
-      )
-      VALUES (
-        gen_random_uuid(),
-        $1,
-        $2,
-        $3,
-        'ward',
-        ST_SetSRID(ST_GeomFromGeoJSON($4), 4326)
-      )
-      `,
-      [props.ten_xa, props.ma_xa, props.loai, geometry],
+  INSERT INTO wards (
+    ma_xa, ten_xa, loai, cap, dtich_km2, dan_so, matdo_km2, ma_tinh, geom, center, metadata
+  )
+  VALUES (
+    $1, $2, $3, $4, $5, $6, $7, $8,
+    ST_SetSRID(ST_GeomFromGeoJSON($9), 4326),
+    ST_PointOnSurface(ST_SetSRID(ST_GeomFromGeoJSON($9), 4326)),
+    $10
+  )
+  ON CONFLICT (ma_xa) DO UPDATE SET
+    ten_xa = EXCLUDED.ten_xa,
+    loai = EXCLUDED.loai,
+    cap = EXCLUDED.cap,
+    dtich_km2 = EXCLUDED.dtich_km2,
+    dan_so = EXCLUDED.dan_so,
+    matdo_km2 = EXCLUDED.matdo_km2,
+    ma_tinh = EXCLUDED.ma_tinh,
+    geom = EXCLUDED.geom,
+    center = EXCLUDED.center,
+    metadata = EXCLUDED.metadata
+  `,
+      [
+        props.ma_xa,
+        props.ten_xa,
+        props.loai ?? null,
+        props.cap ?? null,
+        props.dtich_km2 ?? 0,
+        props.dan_so ?? 0,
+        props.matdo_km2 ?? 0,
+        props.ma_tinh,
+        geometry,
+        JSON.stringify(props),
+      ],
     );
   }
 

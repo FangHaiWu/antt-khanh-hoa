@@ -43,4 +43,32 @@ export class SearchIncidentDto {
   @Type(() => Number)
   @IsInt()
   limit?: number = 10;
+
+  // Properties for GIS
+  @IsOptional()
+  @Type(() => Number)
+  lat?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  lng?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  radius?: number; // in meters
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  bbox?: string; // format: "minLng,minLat,maxLng,maxLat"
+
+  @IsOptional()
+  polygon?: {
+    type: 'Polygon' | 'MultiPolygon';
+    coordinates: number[][][] | number[][][][]; // GeoJSON format
+  };
+
+  @IsOptional()
+  @IsString()
+  intersectWard?: string; // ma_xa of the ward to intersect with
 }
