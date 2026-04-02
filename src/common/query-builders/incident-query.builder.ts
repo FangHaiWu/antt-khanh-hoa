@@ -37,4 +37,56 @@ export function applyIncidentFilters(
   if (dateRange) {
     qb.andWhere('incident.incidentTime BETWEEN :from AND :to', dateRange);
   }
+
+  // FILTER PostGIS
+  // Hỗ trợ lọc theo bounding box (bbox) - định dạng: "minLng,minLat,maxLng,maxLat"
+  if (query.bbox) {
+    const [minLng, minLat, maxLng, maxLat] = query.bbox.split(',').map(Number);
+    qb.andWhere(
+      `
+      Incident.location && ST_MakeEnvelope(:minLng, :minLat, :maxLng, :maxLat, 4326)
+    `,
+      { minLng, minLat, maxLng, maxLat },
+    );
+  }
+  // Hỗ trợ lọc theo khoảng cách từ một điểm (lat, lng) với bán kính (radius)
+  if (query.lat != null && query.lng != null && query.radius != null) {
+    qb.andWhere(
+      `
+      ST_DWithin(
+        Incident.location::geography,
+        ST_SetSRID(ST_MakePoint(:lng, :lat), 4326)::geography,
+        :radius
+      )
+    `,
+      { lat: query.lat, lng: query.lng, radius: query.radius },
+    );
+  }
+  // Hỗ trợ lọc theo polygon (định dạng GeoJSON)
+  if (query.polygon) {
+    qb.andWhere(
+      `
+      ST_Intersects(
+        Incident.location,
+        ST_SetSRID(ST_GeomFromGeoJSON(:polygon), 4326)
+      )
+    `,
+      { polygon: JSON.stringify(query.polygon) }, // Chuyển đối tượng polygon thành chuỗi JSON để truyền vào query
+    );
+  }
+
+  if (query.intersectWard) {
+    qb.andWhere(
+      `
+      EXISTS (
+        SELECT 1
+        FROM wards
+        WHERE wards.ma_xa = :wardCode
+          AND ST_Intersects(
+            Incident.location,
+            wards.geom)
+      `,
+      { wardCode: query.intersectWard },
+    );
+  }
 }

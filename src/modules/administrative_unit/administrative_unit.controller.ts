@@ -6,9 +6,9 @@ export class AdministrativeUnitController {
     private readonly administrativeUnitService: AdministrativeUnitService,
   ) {}
 
-  @Get(':wardCode')
-  async findOne(@Param('wardCode') wardCode: string) {
-    return await this.administrativeUnitService.findOne(wardCode);
+  @Get(':ma_xa')
+  async findOne(@Param('ma_xa') ma_xa: string) {
+    return await this.administrativeUnitService.findOne(ma_xa);
   }
   @Get()
   async findAll() {

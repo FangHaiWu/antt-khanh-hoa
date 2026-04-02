@@ -94,7 +94,7 @@ export class IncidentsService {
       incidentSubtypeCode,
       ward,
       location:
-        createIncidentDto.lng && createIncidentDto.lat
+        createIncidentDto.lng != null && createIncidentDto.lat != null
           ? {
               type: 'Point',
               coordinates: [createIncidentDto.lng, createIncidentDto.lat],
@@ -199,6 +199,13 @@ export class IncidentsService {
     }
     if (updateIncidentDto.sourceUrl !== undefined) {
       incident.sourceUrl = updateIncidentDto.sourceUrl;
+    }
+    const { lng, lat } = updateIncidentDto;
+    if (lng != null && lat != null) {
+      incident.location = {
+        type: 'Point',
+        coordinates: [lng, lat],
+      };
     }
     return await this.incidentRepository.save(incident);
   }
