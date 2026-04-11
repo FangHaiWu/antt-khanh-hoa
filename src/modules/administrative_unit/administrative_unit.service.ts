@@ -8,6 +8,11 @@ import {
   WardGeoJsonFeatureCollection,
 } from './types/ward-geojson.type';
 
+import {
+  SELECT_SINGLE_WARD_FEATURE,
+  SELECT_ALL_WARDS_COLLECTION,
+} from '../gis/queries/administrative-geojson.query';
+
 type FindOneRow = { feature: WardGeoJsonFeature };
 type FindAllRow = { geojson: WardGeoJsonFeatureCollection };
 @Injectable()
@@ -20,14 +25,7 @@ export class AdministrativeUnitService {
 
   async findOne(ma_xa: string): Promise<WardGeoJsonFeature | null> {
     const rows: FindOneRow[] = await this.wardsRepository.query(
-      `
-      SELECT jsonb_build_object(
-        'type', 'Feature',
-        'geometry', ST_AsGeoJSON(geom)::jsonb,
-        'properties', to_jsonb(w) - 'geom' - 'boundary' - 'center') AS feature
-      FROM wards w
-      WHERE w.ma_xa = $1
-      `,
+      SELECT_SINGLE_WARD_FEATURE,
       [ma_xa],
     );
     return rows[0]?.feature ?? null;
@@ -35,19 +33,7 @@ export class AdministrativeUnitService {
 
   async findAll(): Promise<WardGeoJsonFeatureCollection | null> {
     const rows: FindAllRow[] = await this.wardsRepository.query(
-      `
-      SELECT jsonb_build_object(
-        'type', 'FeatureCollection',
-        'features', COALESCE(jsonb_agg(
-          jsonb_build_object(
-            'type', 'Feature',
-            'geometry', ST_AsGeoJSON(geom)::jsonb,
-            'properties', to_jsonb(w) - 'geom' - 'boundary' - 'center'
-          )
-        ), '[]'::jsonb)
-      ) AS  geojson
-      FROM wards w
-      `,
+      SELECT_ALL_WARDS_COLLECTION,
     );
     return rows[0]?.geojson ?? null;
   }

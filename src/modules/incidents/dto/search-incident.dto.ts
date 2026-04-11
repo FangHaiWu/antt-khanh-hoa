@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsString, IsOptional, IsInt } from 'class-validator';
+import { IsString, IsOptional, IsInt, IsNumber } from 'class-validator';
 
 export class SearchIncidentDto {
   @IsOptional()
@@ -47,19 +47,21 @@ export class SearchIncidentDto {
   // Properties for GIS
   @IsOptional()
   @Type(() => Number)
+  @IsNumber()
   lat?: number;
 
   @IsOptional()
   @Type(() => Number)
+  @IsNumber()
   lng?: number;
 
   @IsOptional()
   @Type(() => Number)
+  @IsNumber()
   radius?: number; // in meters
 
   @IsOptional()
-  @Type(() => Number)
-  @IsInt()
+  @IsString()
   bbox?: string; // format: "minLng,minLat,maxLng,maxLat"
 
   @IsOptional()
@@ -70,5 +72,5 @@ export class SearchIncidentDto {
 
   @IsOptional()
   @IsString()
-  intersectWard?: string; // ma_xa of the ward to intersect with
+  intersectsWard?: string; // ma_xa of the ward to intersect with
 }
