@@ -1,7 +1,7 @@
 import { Controller, Get, Param, Post, Query, Body } from '@nestjs/common';
 import { GisService } from './gis.service';
 import { SearchIncidentDto } from '../incidents/dto/search-incident.dto';
-import { ReverseGeocodeQueryDto } from './dto/revesre-geocode-query.dto';
+import { ReverseGeocodeQueryDto } from './dto/reverse-geocode-query.dto';
 import { WithinPolygonQueryDto } from './dto/within-polygon.query';
 
 @Controller('gis')
