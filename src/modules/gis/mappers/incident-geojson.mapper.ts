@@ -1,6 +1,6 @@
 import { Incident } from 'src/modules/incidents/entities/incident.entity';
 import { toFeature } from '../utils/geojson-response.util';
-
+import { toFeatureCollection } from '../utils/geojson-response.util';
 export function toIncidentFeature(incident: Incident) {
   return toFeature(
     incident.location,
@@ -25,7 +25,7 @@ export function toIncidentFeature(incident: Incident) {
 }
 
 export function toIncidentFeatureCollection(incidents: Incident[]) {
-  return {
-    incidents: incidents.map((incident) => toIncidentFeature(incident)),
-  };
+  return toFeatureCollection(
+    incidents.map((incident) => toIncidentFeature(incident)),
+  );
 }

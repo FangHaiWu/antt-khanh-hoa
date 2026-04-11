@@ -19,7 +19,7 @@ import {
   toIncidentFeatureCollection,
   toIncidentFeature,
 } from './mappers/incident-geojson.mapper';
-import { ReverseGeocodeQueryDto } from './dto/revesre-geocode-query.dto';
+import { ReverseGeocodeQueryDto } from './dto/reverse-geocode-query.dto';
 @Injectable()
 export class GisService {
   constructor(
@@ -78,6 +78,11 @@ export class GisService {
     if (!incident) {
       throw new NotFoundException(`Incident with id ${id} not found`);
     }
+    if (!incident.location) {
+      throw new NotFoundException(
+        `Incident with id ${id} has no GIS location data`,
+      );
+    }
     return toIncidentFeature(incident);
   }
 
@@ -89,11 +94,15 @@ export class GisService {
     qb.where('incident.location IS NOT NULL');
 
     applyIncidentFilters(qb, query);
-
+    qb.setParameters({
+      lat: query.lat,
+      lng: query.lng,
+    });
     qb.orderBy(
       'ST_Distance(incident.location::geography, ST_SetSRID(ST_MakePoint(:lng, :lat), 4326)::geography)',
       'ASC',
     );
+
     const incidents = await qb.getMany();
     return toIncidentFeatureCollection(incidents);
   }
@@ -148,15 +157,15 @@ export class GisService {
     const incidents = await qb.getMany();
     return toIncidentFeatureCollection(incidents);
   }
-
-  // Tra ve geojson cua mot su co, duoc xac dinh boi id
+  // Cac chuc nang phan tich
+  // 1. Tra ve dia chi gan nhat voi mot diem, duoc xac dinh boi lat/lng
   async reverseGeocode(query: ReverseGeocodeQueryDto) {
     const rows: {
       ma_xa: string;
       ten_xa: string;
       ma_tinh: string;
       ten_tinh: string;
-    }[] = await this.incidentRepository.query(SELECT_REVERSE_GEOCODE, [
+    }[] = await this.wardsRepository.query(SELECT_REVERSE_GEOCODE, [
       query.lng,
       query.lat,
     ]);
