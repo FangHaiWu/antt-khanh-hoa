@@ -31,7 +31,7 @@ export function applyIncidentFilters(
     });
   }
   if (query.ma_xa) {
-    qb.andWhere('incident.ma_xa = :ma_xa', { ma_xa: query.ma_xa });
+    qb.andWhere('incident.wardCode = :ma_xa', { ma_xa: query.ma_xa });
   }
   const dateRange = buildDateRange(query.fromDate, query.toDate);
   if (dateRange) {
@@ -44,7 +44,7 @@ export function applyIncidentFilters(
     const [minLng, minLat, maxLng, maxLat] = query.bbox.split(',').map(Number);
     qb.andWhere(
       `
-      Incident.location && ST_MakeEnvelope(:minLng, :minLat, :maxLng, :maxLat, 4326)
+      incident.location && ST_MakeEnvelope(:minLng, :minLat, :maxLng, :maxLat, 4326)
     `,
       { minLng, minLat, maxLng, maxLat },
     );
@@ -54,7 +54,7 @@ export function applyIncidentFilters(
     qb.andWhere(
       `
       ST_DWithin(
-        Incident.location::geography,
+        incident.location::geography,
         ST_SetSRID(ST_MakePoint(:lng, :lat), 4326)::geography,
         :radius
       )
@@ -67,7 +67,7 @@ export function applyIncidentFilters(
     qb.andWhere(
       `
       ST_Intersects(
-        Incident.location,
+        incident.location,
         ST_SetSRID(ST_GeomFromGeoJSON(:polygon), 4326)
       )
     `,
@@ -75,7 +75,7 @@ export function applyIncidentFilters(
     );
   }
 
-  if (query.intersectWard) {
+  if (query.intersectsWard) {
     qb.andWhere(
       `
       EXISTS (
@@ -83,10 +83,12 @@ export function applyIncidentFilters(
         FROM wards
         WHERE wards.ma_xa = :wardCode
           AND ST_Intersects(
-            Incident.location,
-            wards.geom)
+            incident.location,
+            wards.geom
+          )
+      )
       `,
-      { wardCode: query.intersectWard },
+      { wardCode: query.intersectsWard },
     );
   }
 }
