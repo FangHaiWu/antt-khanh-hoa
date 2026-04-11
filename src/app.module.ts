@@ -7,6 +7,7 @@ import { AdministrativeUnitModule } from './modules/administrative_unit/administ
 import { IncidentsController } from './modules/incidents/incidents.controller';
 import { IncidentsModule } from './modules/incidents/incidents.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
+import { GisModule } from './modules/gis/gis.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -24,6 +25,7 @@ import { AnalyticsModule } from './modules/analytics/analytics.module';
     AdministrativeUnitModule,
     IncidentsModule,
     AnalyticsModule,
+    GisModule,
   ],
   controllers: [AppController, IncidentsController],
   providers: [AppService],
