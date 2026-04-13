@@ -3,6 +3,7 @@ import { GisService } from './gis.service';
 import { SearchIncidentDto } from '../incidents/dto/search-incident.dto';
 import { ReverseGeocodeQueryDto } from './dto/reverse-geocode-query.dto';
 import { WithinPolygonQueryDto } from './dto/within-polygon.query';
+import { HotspotQueryDto } from './dto/hotspot-query.dto';
 
 @Controller('gis')
 export class GisController {
@@ -10,6 +11,11 @@ export class GisController {
 
   // Các endpoint của controller này cho phép người dùng truy cập dữ liệu GIS dưới dạng GeoJSON, bao gồm thông tin về các tỉnh, xã và các sự cố liên quan đến các xã đó. Các endpoint này sử dụng các phương thức HTTP GET để lấy dữ liệu từ service và trả về cho client.
   // Tra ve geojson cua tinh Khanh Hoa
+
+  @Get('layers')
+  getGisLayers() {
+    return this.gisService.getGisLayers();
+  }
   @Get('province')
   async getProvinceGeoJson() {
     return this.gisService.getProvinceGeoJson();
@@ -53,7 +59,18 @@ export class GisController {
   async getIncidentsWithinPolygon(@Body() query: WithinPolygonQueryDto) {
     return this.gisService.getIncidentsWithinPolygon(query);
   }
+  // Tra ve danh sach cac su co nam trong mot polygon, duoc xac dinh boi mot array cac diem (lat/lng), va co the loc theo keyword, loai su co, thoi gian, khu vuc (bbox hoac lat/lng/radius) --- IGNORE ---
+  @Get('incidents/heatmap')
+  async getIncidentHeatmap(@Query() query: HotspotQueryDto) {
+    return this.gisService.getIncidentHeatmap(query);
+  }
 
+  // Tra ve danh sach cac su co nam trong mot polygon, duoc xac dinh boi mot array cac diem (lat/lng), va co the loc theo keyword, loai su co, thoi gian, khu vuc (bbox hoac lat/lng/radius) --- IGNORE ---
+
+  @Get('incidents/hotspots')
+  async getIncidentHotspots(@Query() query: HotspotQueryDto) {
+    return this.gisService.getIncidentHotspots(query);
+  }
   // Tra ve geojson cua mot su co, duoc xac dinh boi id
   @Get('incidents/:id')
   async getIncidentGeoJson(@Param('id') id: string) {
@@ -63,5 +80,10 @@ export class GisController {
   @Get('reverse-geocode')
   async reverseGeocode(@Query() query: ReverseGeocodeQueryDto) {
     return this.gisService.reverseGeocode(query);
+  }
+
+  @Get('metadata/incidents')
+  getIncidentMetadata() {
+    return this.gisService.getIncidentMetadata();
   }
 }
