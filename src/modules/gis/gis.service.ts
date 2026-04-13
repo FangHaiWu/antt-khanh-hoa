@@ -20,6 +20,9 @@ import {
   toIncidentFeature,
 } from './mappers/incident-geojson.mapper';
 import { ReverseGeocodeQueryDto } from './dto/reverse-geocode-query.dto';
+import { HotspotQueryDto } from './dto/hotspot-query.dto';
+import { toFeature, toFeatureCollection } from './utils/geojson-response.util';
+import { GisLayerDefinition } from './types/gis-layer.type';
 @Injectable()
 export class GisService {
   constructor(
@@ -153,7 +156,6 @@ export class GisService {
       incidentTypeCode: body.incidentTypeCode,
     });
     qb.orderBy('incident.incidentTime', 'DESC');
-
     const incidents = await qb.getMany();
     return toIncidentFeatureCollection(incidents);
   }
@@ -181,6 +183,182 @@ export class GisService {
       point: { lng: query.lng, lat: query.lat },
       ward: { code: row.ma_xa, name: row.ten_xa },
       province: { code: row.ma_tinh, name: row.ten_tinh },
+    };
+  }
+
+  // Heatmap, tra ve FeatureCollection chua cac su co, co the loc theo keyword, loai su co, thoi gian, khu vuc (bbox hoac lat/lng/radius), va co the gioi han so luong su co tra ve
+  async getIncidentHeatmap(query: HotspotQueryDto) {
+    const qb = this.incidentRepository.createQueryBuilder('incident');
+    qb.where('incident.location IS NOT NULL');
+
+    applyIncidentFilters(qb, query);
+    qb.orderBy('incident.incidentTime', 'DESC');
+
+    if (query.limit) {
+      qb.take(query.limit);
+    }
+    const incidents = await qb.getMany();
+    return toIncidentFeatureCollection(incidents);
+  }
+
+  // Hotspot
+  async getIncidentHotspots(query: HotspotQueryDto) {
+    const qb = this.incidentRepository.createQueryBuilder('incident');
+    qb.where('incident.location IS NOT NULL');
+
+    applyIncidentFilters(qb, query);
+    const hotspotsRows: {
+      ma_xa: string;
+      ten_xa: string;
+      incident_count: number;
+    }[] = await qb
+      .select('incident.wardCode', 'ma_xa')
+      .addSelect('COUNT(*)', 'incident_count')
+      .groupBy('incident.wardCode')
+      .getRawMany();
+    if (!hotspotsRows.length) {
+      return {
+        type: 'FeatureCollection',
+        feature: [],
+      };
+    }
+    const wardCodes = hotspotsRows.map((row) => row.ma_xa);
+
+    const wards = await this.wardsRepository.find({
+      where: wardCodes.map((ma_xa) => ({ ma_xa })),
+    });
+
+    const countMap = new Map(
+      hotspotsRows.map((row) => [row.ma_xa, Number(row.incident_count)]),
+    );
+
+    const features = wards.map((ward) =>
+      toFeature(
+        ward.boundary,
+        {
+          ma_xa: ward.ma_xa,
+          ten_xa: ward.ten_xa,
+          loai: ward.loai,
+          dtich_km2: ward.dtich_km2,
+          dan_so: ward.dan_so,
+          matdo_km2: ward.matdo_km2,
+          ma_tinh: ward.ma_tinh,
+          incident_count: countMap.get(ward.ma_xa) || 0,
+        },
+        ward.ma_xa,
+      ),
+    );
+    return toFeatureCollection(features);
+  }
+
+  getGisLayers(): GisLayerDefinition[] {
+    return [
+      {
+        id: 'province',
+        name: 'Tỉnh Khánh Hòa',
+        type: 'polygon',
+        endpoint: '/gis/province',
+        visibleByDefault: true,
+        supportsBBox: false,
+        supportsTimeFilter: false,
+      },
+      {
+        id: 'wards',
+        name: 'Địa giới xã/phường',
+        type: 'polygon',
+        endpoint: '/gis/wards',
+        visibleByDefault: true,
+        supportsBBox: false,
+        supportsTimeFilter: false,
+      },
+      {
+        id: 'incidents',
+        name: 'Vụ việc',
+        type: 'point',
+        endpoint: '/gis/incidents',
+        visibleByDefault: true,
+        supportsBBox: true,
+        supportsTimeFilter: true,
+      },
+      {
+        id: 'heatmap',
+        name: 'Bản đồ nhiệt',
+        type: 'heatmap',
+        endpoint: '/gis/incidents/heatmap',
+        visibleByDefault: false,
+        supportsBBox: true,
+        supportsTimeFilter: true,
+      },
+      {
+        id: 'hotspots',
+        name: 'Điểm nóng',
+        type: 'polygon',
+        endpoint: '/gis/incidents/hotspots',
+        visibleByDefault: false,
+        supportsBBox: true,
+        supportsTimeFilter: true,
+      },
+      {
+        id: 'cluster',
+        name: 'Cụm vụ việc',
+        type: 'cluster',
+        endpoint: '/gis/incidents/near',
+        visibleByDefault: false,
+        supportsBBox: true,
+        supportsTimeFilter: true,
+      },
+    ];
+  }
+
+  getIncidentMetadata() {
+    return {
+      id: 'incident',
+      name: 'Vụ việc ANTT',
+      geometryType: 'Point',
+      crs: 'EPSG:4326',
+      timeField: 'incidentTime',
+      primaryKey: 'id',
+      filter: [
+        'keyword',
+        'title',
+        'description',
+        'incidentTypeCode',
+        'incidentSubtypeCode',
+        'incidentCategoryCode',
+        'ma_xa',
+        'fromDate',
+        'toDate',
+        'bbox',
+        'lat',
+        'lng',
+        'radius',
+        'polygon',
+        'intersectsWard',
+      ],
+      fields: [
+        { name: 'id', type: 'uuid', label: 'Mã vụ việc' },
+        { name: 'title', type: 'string', label: 'Tiêu đề' },
+        { name: 'description', type: 'string', label: 'Mô tả' },
+        { name: 'incidentTypeCode', type: 'string', label: 'Mã loại vụ việc' },
+        {
+          name: 'incidentSubtypeCode',
+          type: 'string',
+          label: 'Mã phân loại vụ việc',
+        },
+        {
+          name: 'incidentCategoryCode',
+          type: 'string',
+          label: 'Mã nhóm loại vụ việc',
+        },
+        { name: 'ma_xa', type: 'string', label: 'Mã xã/phường' },
+        {
+          name: 'incidentTime',
+          type: 'datetime',
+          label: 'Thời gian xảy ra vụ việc',
+        },
+        { name: 'sourceType', type: 'string', label: 'Loại nguồn thông tin' },
+        { name: 'sourceUrl', type: 'string', label: 'URL nguồn thông tin' },
+      ],
     };
   }
 }
