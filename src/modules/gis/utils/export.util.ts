@@ -25,7 +25,7 @@ export function incidentsToGeoJSON(incidents: Incident[]) {
       incident.incidentTypeCode ?? '',
       incident.incidentCategoryCode ?? '',
       incident.incidentSubtypeCode ?? '',
-      incident.wardCode ?? '',
+      incident.ma_xa ?? '',
       incident.location?.coordinates?.[0] ?? '',
       incident.location?.coordinates?.[1] ?? '',
     ].join(','),

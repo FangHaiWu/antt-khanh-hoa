@@ -8,6 +8,6 @@ export class IncidentResponseDto {
   sourceUrl?: string;
   incidentTypeId: number;
   incidentTypeName: string;
-  ma_xa: string;
+  wardCode: string;
   createdAt: Date;
 }
