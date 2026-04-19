@@ -15,7 +15,7 @@ export const SELECT_WARD_HOTSPOT = `
 ) AS geojson
 FROM (
   SELECT incident.ma_xa, COUNT(*) AS count
-  FROM incidents incident
+  FROM incident incident
   WHERE incident.location IS NOT NULL
   GROUP BY incident.ma_xa
 ) hotspot

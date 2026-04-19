@@ -17,8 +17,8 @@ import { Ward } from 'src/modules/administrative_unit/entities/wards.entity';
 @Index(['incidentTypeCode'])
 @Index(['incidentSubtypeCode'])
 @Index(['incidentCategoryCode'])
-@Index(['wardCode'])
-@Index(['wardCode', 'incidentTypeCode'])
+@Index(['ma_xa'])
+@Index(['ma_xa', 'incidentTypeCode'])
 @Entity('incident')
 export class Incident {
   @PrimaryGeneratedColumn('uuid')
@@ -83,8 +83,8 @@ export class Incident {
   @Column({ type: 'varchar', nullable: true })
   incidentSubtypeCode?: string | null;
 
-  @Column({ name: 'ma_xa', nullable: true })
-  wardCode: string;
+  @Column({ nullable: true })
+  ma_xa: string;
 
   @ManyToOne(() => Ward)
   @JoinColumn({ name: 'ma_xa', referencedColumnName: 'ma_xa' })

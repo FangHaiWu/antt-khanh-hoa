@@ -16,7 +16,7 @@ export function toIncidentFeature(incident: Incident) {
       incidentCategoryCode: incident.incidentCategoryCode,
       incidentTypeCode: incident.incidentTypeCode,
       incidentSubtypeCode: incident.incidentSubtypeCode,
-      wardCode: incident.wardCode,
+      ma_xa: incident.ma_xa,
       createdAt: incident.createdAt,
       updatedAt: incident.updatedAt,
     },

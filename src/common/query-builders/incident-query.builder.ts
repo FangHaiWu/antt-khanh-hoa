@@ -31,7 +31,7 @@ export function applyIncidentFilters(
     });
   }
   if (query.ma_xa) {
-    qb.andWhere('incident.wardCode = :ma_xa', { ma_xa: query.ma_xa });
+    qb.andWhere('incident.ma_xa = :ma_xa', { ma_xa: query.ma_xa });
   }
   const dateRange = buildDateRange(query.fromDate, query.toDate);
   if (dateRange) {
@@ -81,14 +81,14 @@ export function applyIncidentFilters(
       EXISTS (
         SELECT 1
         FROM wards
-        WHERE wards.ma_xa = :wardCode
+        WHERE wards.ma_xa = :ma_xa
           AND ST_Intersects(
             incident.location,
             wards.geom
           )
       )
       `,
-      { wardCode: query.intersectsWard },
+      { ma_xa: query.intersectsWard },
     );
   }
 }

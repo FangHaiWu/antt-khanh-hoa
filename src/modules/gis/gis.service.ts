@@ -212,9 +212,9 @@ export class GisService {
       ten_xa: string;
       incident_count: number;
     }[] = await qb
-      .select('incident.wardCode', 'ma_xa')
+      .select('incident.ma_xa', 'ma_xa')
       .addSelect('COUNT(*)', 'incident_count')
-      .groupBy('incident.wardCode')
+      .groupBy('incident.ma_xa')
       .getRawMany();
     if (!hotspotsRows.length) {
       return {
