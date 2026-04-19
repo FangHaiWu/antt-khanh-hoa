@@ -8,6 +8,7 @@ import { IncidentsController } from './modules/incidents/incidents.controller';
 import { IncidentsModule } from './modules/incidents/incidents.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { GisModule } from './modules/gis/gis.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -26,6 +27,7 @@ import { GisModule } from './modules/gis/gis.module';
     IncidentsModule,
     AnalyticsModule,
     GisModule,
+    DashboardModule,
   ],
   controllers: [AppController, IncidentsController],
   providers: [AppService],
