@@ -1,0 +1,4 @@
+interface:
+  display_name: "ANTT Dashboard Delivery"
+  short_description: "Thiết kế contract dashboard ANTT"
+  default_prompt: "Use $antt-dashboard-delivery để tạo KPI, summary, trend và contract phục vụ dashboard ANTT."

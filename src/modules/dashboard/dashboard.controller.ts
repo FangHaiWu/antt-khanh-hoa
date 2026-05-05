@@ -1,6 +1,7 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { DashboardService } from './dashboard.service';
 import { DashboardQueryDto } from './dto/Dashboard-query.dto';
+import { DashboardBreakdownQueryDto } from './dto/Dashboard-breakdown-query.dto';
 @Controller('dashboard')
 export class DashboardController {
   constructor(private readonly dashboardService: DashboardService) {}
@@ -9,9 +10,13 @@ export class DashboardController {
   async getSummary(@Query() query: DashboardQueryDto) {
     return this.dashboardService.getSummary(query);
   }
-
-  @Get('trend')
+  @Get('/trend')
   async getTrend(@Query() query: DashboardQueryDto) {
     return this.dashboardService.getTrend(query);
+  }
+
+  @Get('/breakdown')
+  async getBreakdown(@Query() query: DashboardBreakdownQueryDto) {
+    return this.dashboardService.getBreakdown(query);
   }
 }

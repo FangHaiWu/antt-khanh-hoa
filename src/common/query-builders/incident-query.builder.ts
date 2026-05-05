@@ -1,11 +1,26 @@
 import { SelectQueryBuilder } from 'typeorm';
 import { Incident } from 'src/modules/incidents/entities/incident.entity';
-import { SearchIncidentDto } from 'src/modules/incidents/dto/search-incident.dto';
 import { buildDateRange } from '../utils/date.util';
 
+type IncidentFilterQuery = {
+  keyword?: string;
+  incidentCategoryCode?: string;
+  incidentTypeCode?: string;
+  incidentSubtypeCode?: string;
+  ma_xa?: string;
+  bbox?: string;
+  lat?: number;
+  lng?: number;
+  radius?: number;
+  polygon?: {
+    type: 'Polygon' | 'MultiPolygon';
+    coordinates: number[][][] | number[][][][];
+  };
+  intersectsWard?: string;
+};
 export function applyIncidentFilters(
   qb: SelectQueryBuilder<Incident>,
-  query: SearchIncidentDto,
+  query: IncidentFilterQuery,
 ) {
   if (query.keyword) {
     qb.andWhere(
@@ -33,11 +48,6 @@ export function applyIncidentFilters(
   if (query.ma_xa) {
     qb.andWhere('incident.ma_xa = :ma_xa', { ma_xa: query.ma_xa });
   }
-  const dateRange = buildDateRange(query.fromDate, query.toDate);
-  if (dateRange) {
-    qb.andWhere('incident.incidentTime BETWEEN :from AND :to', dateRange);
-  }
-
   // FILTER PostGIS
   // Hỗ trợ lọc theo bounding box (bbox) - định dạng: "minLng,minLat,maxLng,maxLat"
   if (query.bbox) {
@@ -91,4 +101,17 @@ export function applyIncidentFilters(
       { ma_xa: query.intersectsWard },
     );
   }
+}
+
+export function applyIncidentDateRange(
+  qb: SelectQueryBuilder<Incident>,
+  fromDate?: string,
+  toDate?: string,
+) {
+  const dateRange = buildDateRange(fromDate, toDate);
+  if (!dateRange) {
+    return; // Nếu không có ngày hợp lệ, không áp dụng filter
+  }
+
+  qb.andWhere('incident.incidentTime BETWEEN :from AND :to', dateRange);
 }

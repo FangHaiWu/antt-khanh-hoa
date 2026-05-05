@@ -4,7 +4,10 @@ import { Repository } from 'typeorm';
 import { Incident } from '../incidents/entities/incident.entity';
 import { buildDateRange } from '../../common/utils/date.util';
 import { StatsQueryDto } from './dto/stats-query.dto';
-import { applyIncidentFilters } from 'src/common/query-builders/incident-query.builder';
+import {
+  applyIncidentDateRange,
+  applyIncidentFilters,
+} from 'src/common/query-builders/incident-query.builder';
 
 @Injectable()
 export class AnalyticsService {
@@ -19,7 +22,7 @@ export class AnalyticsService {
     const qb = this.incidentRepository.createQueryBuilder('incident');
     qb.where('1=1');
     applyIncidentFilters(qb, query);
-
+    applyIncidentDateRange(qb, query.fromDate, query.toDate);
     // dynamic group theo thoi gian
     const timeGroup =
       query.groupByTime === 'week'
@@ -113,6 +116,7 @@ export class AnalyticsService {
     const qb = this.incidentRepository.createQueryBuilder('incident');
     qb.where('1=1');
     applyIncidentFilters(qb, query);
+    applyIncidentDateRange(qb, query.fromDate, query.toDate);
 
     return qb
       .select('incident.ma_xa', 'ma_xa')
@@ -129,8 +133,8 @@ export class AnalyticsService {
     const qb = this.incidentRepository.createQueryBuilder('incident');
     qb.where('1=1');
     applyIncidentFilters(qb, query);
+    applyIncidentDateRange(qb, query.fromDate, query.toDate);
 
-    // dynamic group
     const groupByField = query.groupBy || 'incidentTypeCode';
     return qb
       .select(`incident.${groupByField}`, 'group')

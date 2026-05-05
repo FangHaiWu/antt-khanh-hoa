@@ -1,0 +1,4 @@
+interface:
+  display_name: "ANTT Quality Guard"
+  short_description: "Bảo vệ chất lượng dữ liệu và API"
+  default_prompt: "Use $antt-quality-guard để bổ sung test, seed, contract và data quality guard cho antt-khanh-hoa."

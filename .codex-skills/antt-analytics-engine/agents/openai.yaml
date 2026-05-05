@@ -1,0 +1,4 @@
+interface:
+  display_name: "ANTT Analytics Engine"
+  short_description: "Xây chỉ số, trend và compare engine"
+  default_prompt: "Use $antt-analytics-engine để mở rộng thống kê, trend, compare và heatmap của antt-khanh-hoa."
