@@ -1,0 +1,4 @@
+interface:
+  display_name: "ANTT Alert Orchestrator"
+  short_description: "Thiết kế rule alert và notification"
+  default_prompt: "Use $antt-alert-orchestrator để xây dựng rule cảnh báo, suppression và notification cho antt-khanh-hoa."

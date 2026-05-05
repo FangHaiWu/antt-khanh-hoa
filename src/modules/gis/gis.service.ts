@@ -6,7 +6,10 @@ import { Province } from '../administrative_unit/entities/province.entity';
 import { Incident } from '../incidents/entities/incident.entity';
 import { SearchIncidentDto } from '../incidents/dto/search-incident.dto';
 import { WithinPolygonQueryDto } from './dto/within-polygon.query';
-import { applyIncidentFilters } from 'src/common/query-builders/incident-query.builder';
+import {
+  applyIncidentDateRange,
+  applyIncidentFilters,
+} from 'src/common/query-builders/incident-query.builder';
 import {
   SELECT_PROVINCE_FEATURE,
   SELECT_SINGLE_WARD_FEATURE,
@@ -151,10 +154,9 @@ export class GisService {
 
     applyIncidentFilters(qb, {
       polygon: body.polygon,
-      fromDate: body.fromDate,
-      toDate: body.toDate,
       incidentTypeCode: body.incidentTypeCode,
     });
+    applyIncidentDateRange(qb, body.fromDate, body.toDate);
     qb.orderBy('incident.incidentTime', 'DESC');
     const incidents = await qb.getMany();
     return toIncidentFeatureCollection(incidents);

@@ -1,0 +1,4 @@
+interface:
+  display_name: "ANTT Forecast Engine"
+  short_description: "Thiết kế dự báo rủi ro và xu hướng"
+  default_prompt: "Use $antt-forecast-engine để thiết kế feature store, scoring và forecast module cho antt-khanh-hoa."

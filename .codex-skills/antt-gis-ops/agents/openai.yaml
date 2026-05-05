@@ -1,0 +1,4 @@
+interface:
+  display_name: "ANTT GIS Ops"
+  short_description: "Phát triển truy vấn không gian PostGIS"
+  default_prompt: "Use $antt-gis-ops để thêm truy vấn GIS, GeoJSON, hotspot hoặc reverse geocode cho antt-khanh-hoa."

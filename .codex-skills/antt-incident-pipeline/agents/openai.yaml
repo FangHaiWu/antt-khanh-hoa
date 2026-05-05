@@ -1,0 +1,4 @@
+interface:
+  display_name: "ANTT Incident Pipeline"
+  short_description: "Chuẩn hóa intake và domain incident"
+  default_prompt: "Use $antt-incident-pipeline để mở rộng incident intake, DTO, entity, service và query của antt-khanh-hoa."

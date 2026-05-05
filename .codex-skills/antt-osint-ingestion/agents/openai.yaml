@@ -1,0 +1,4 @@
+interface:
+  display_name: "ANTT OSINT Ingestion"
+  short_description: "Thiết kế pipeline OSINT vào incident"
+  default_prompt: "Use $antt-osint-ingestion để xây dựng pipeline thu thập, chuẩn hóa và đổ OSINT vào antt-khanh-hoa."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "ANTT System Architect"
+  short_description: "Thiết kế kiến trúc backend ANTT"
+  default_prompt: "Use $antt-system-architect để thiết kế hoặc refactor luồng ANTT nhiều module trong antt-khanh-hoa."
