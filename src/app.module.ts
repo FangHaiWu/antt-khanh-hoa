@@ -9,6 +9,7 @@ import { IncidentsModule } from './modules/incidents/incidents.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { GisModule } from './modules/gis/gis.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
+import { OsintModule } from './modules/osint/osint.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -28,6 +29,7 @@ import { DashboardModule } from './modules/dashboard/dashboard.module';
     AnalyticsModule,
     GisModule,
     DashboardModule,
+    OsintModule,
   ],
   controllers: [AppController, IncidentsController],
   providers: [AppService],
