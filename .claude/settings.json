@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run test*)",
+      "Bash(npm run lint*)",
+      "Bash(npm run build*)",
+      "Bash(npm run format*)",
+      "Bash(find * -type f*)",
+      "Bash(find * -name *)",
+      "Bash(grep -r*)",
+      "Bash(grep -n*)",
+      "Bash(grep -l*)",
+      "Bash(ls*)",
+      "Bash(cat *)",
+      "Bash(git log*)",
+      "Bash(git diff*)",
+      "Bash(git status)",
+      "Bash(git branch*)",
+      "Bash(git show*)"
+    ],
+    "deny": [
+      "Bash(git push*)",
+      "Bash(git reset --hard*)",
+      "Bash(rm -rf*)",
+      "Bash(DROP TABLE*)",
+      "Bash(DROP DATABASE*)",
+      "Bash(npm publish*)"
+    ]
+  }
+}
